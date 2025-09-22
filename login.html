@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - City Library</title>
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h1>📚 City Library</h1>
+          <p>Welcome back! Please sign in to your account</p>
+        </div>
+
+        <form id="login-form" class="login-form">
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <input type="text" id="username" name="username" required />
+            <span class="input-icon">👤</span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+            <span class="input-icon">🔒</span>
+            <button type="button" class="toggle-password" id="toggle-password">
+              👁️
+            </button>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" id="remember" />
+              <span class="checkmark"></span>
+              Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">
+            <span class="btn-text">Sign In</span>
+            <div class="loader" style="display: none"></div>
+          </button>
+
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <div class="demo-accounts">
+            <h3>Demo Accounts</h3>
+            <div class="demo-buttons">
+              <button
+                type="button"
+                class="demo-btn"
+                data-username="john.doe"
+                data-password="user123"
+              >
+                Login as User
+              </button>
+              <button
+                type="button"
+                class="demo-btn"
+                data-username="admin"
+                data-password="admin123"
+              >
+                Login as Admin
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div class="login-footer">
+          <p>Don't have an account? <a href="register.html">Sign Up</a></p>
+        </div>
+      </div>
+
+      <div class="background-animation">
+        <div class="floating-book book1">📖</div>
+        <div class="floating-book book2">📚</div>
+        <div class="floating-book book3">📘</div>
+        <div class="floating-book book4">📗</div>
+        <div class="floating-book book5">📙</div>
+      </div>
+    </div>
+
+    <script src="login.js"></script>
+  </body>
+</html>
+
+<script>
+  // DOM Elements
+  const loginForm = document.getElementById("login-form");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const togglePassword = document.getElementById("toggle-password");
+  const loginBtn = document.querySelector(".login-btn");
+  const btnText = document.querySelector(".btn-text");
+  const loader = document.querySelector(".loader");
+  const demoBtns = document.querySelectorAll(".demo-btn");
+
+  // Sample user credentials
+  const validCredentials = [
+    {
+      username: "john.doe",
+      password: "user123",
+      role: "user",
+      name: "John Doe",
+    },
+    {
+      username: "admin",
+      password: "admin123",
+      role: "admin",
+      name: "Admin User",
+    },
+    {
+      username: "jane.smith",
+      password: "user123",
+      role: "user",
+      name: "Jane Smith",
+    },
+    {
+      username: "user@library.com",
+      password: "password123",
+      role: "user",
+      name: "Library User",
+    },
+  ];
+
+  // Initialize event listeners
+  document.addEventListener("DOMContentLoaded", function () {
+    // Check if user is already logged in
+    const currentUser = JSON.parse(
+      localStorage.getItem("currentUser") || "null"
+    );
+    if (currentUser) {
+      redirectToUserPage();
+    }
+
+    // Form submission
+    loginForm.addEventListener("submit", handleLogin);
+
+    // Toggle password visibility
+    togglePassword.addEventListener("click", handleTogglePassword);
+
+    // Demo account buttons
+    demoBtns.forEach((btn) => {
+      btn.addEventListener("click", handleDemoLogin);
+    });
+
+    // Add input event listeners for real-time validation
+    usernameInput.addEventListener("input", clearErrors);
+    passwordInput.addEventListener("input", clearErrors);
+  });
+
+  // Handle login form submission
+  async function handleLogin(e) {
+    e.preventDefault();
+
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!username || !password) {
+      showError("Please fill in all fields");
+      return;
+    }
+
+    // Show loading state
+    setLoadingState(true);
+
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // Validate credentials
+    const user = validateCredentials(username, password);
+
+    if (user) {
+      // Store user session
+      localStorage.setItem("currentUser", JSON.stringify(user));
+      localStorage.setItem("loginTime", new Date().toISOString());
+
+      showSuccess("Login successful! Redirecting...");
+
+      // Redirect based on user role
+      setTimeout(() => {
+        if (user.role === "admin") {
+          redirectToAdminPage();
+        } else {
+          redirectToUserPage();
+        }
+      }, 1000);
+    } else {
+      showError("Invalid username or password");
+      setLoadingState(false);
+    }
+  }
+
+  // Validate user credentials
+  function validateCredentials(username, password) {
+    return validCredentials.find(
+      (cred) =>
+        (cred.username === username ||
+          cred.username === username.toLowerCase()) &&
+        cred.password === password
+    );
+  }
+
+  // Handle demo account login
+  function handleDemoLogin(e) {
+    const username = e.target.dataset.username;
+    const password = e.target.dataset.password;
+
+    usernameInput.value = username;
+    passwordInput.value = password;
+
+    // Trigger form submission
+    loginForm.dispatchEvent(new Event("submit"));
+  }
+
+  // Toggle password visibility
+  function handleTogglePassword() {
+    const isPassword = passwordInput.type === "password";
+    passwordInput.type = isPassword ? "text" : "password";
+    togglePassword.textContent = isPassword ? "🙈" : "👁️";
+  }
+
+  // Show error message
+  function showError(message) {
+    clearMessages();
+    const errorDiv = document.createElement("div");
+    errorDiv.className = "error-message";
+    errorDiv.textContent = message;
+    loginForm.insertBefore(errorDiv, loginForm.firstChild);
+  }
+
+  // Show success message
+  function showSuccess(message) {
+    clearMessages();
+    const successDiv = document.createElement("div");
+    successDiv.className = "success-message";
+    successDiv.textContent = message;
+    loginForm.insertBefore(successDiv, loginForm.firstChild);
+  }
+
+  // Clear all messages
+  function clearMessages() {
+    const messages = document.querySelectorAll(
+      ".error-message, .success-message"
+    );
+    messages.forEach((msg) => msg.remove());
+  }
+
+  // Clear errors when user starts typing
+  function clearErrors() {
+    const errorMessages = document.querySelectorAll(".error-message");
+    errorMessages.forEach((msg) => msg.remove());
+  }
+
+  // Set loading state
+  function setLoadingState(loading) {
+    if (loading) {
+      btnText.style.display = "none";
+      loader.style.display = "block";
+      loginBtn.disabled = true;
+      loginBtn.style.cursor = "not-allowed";
+    } else {
+      btnText.style.display = "block";
+      loader.style.display = "none";
+      loginBtn.disabled = false;
+      loginBtn.style.cursor = "pointer";
+    }
+  }
+
+  // Redirect to user page
+  function redirectToUserPage() {
+    window.location.href = "user-dashboard.html";
+  }
+
+  // Redirect to admin page (for future implementation)
+  function redirectToAdminPage() {
+    // For now, redirect to user page
+    // Later you can create admin-dashboard.html
+    alert("Admin panel coming soon! Redirecting to user dashboard.");
+    redirectToUserPage();
+  }
+
+  // Utility function to get current user
+  function getCurrentUser() {
+    return JSON.parse(localStorage.getItem("currentUser") || "null");
+  }
+
+  // Utility function to logout
+  function logout() {
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("loginTime");
+    window.location.href = "login.html";
+  }
+
+  // Add some keyboard shortcuts
+  document.addEventListener("keydown", function (e) {
+    // Press Ctrl+Enter to submit form
+    if (e.ctrlKey && e.key === "Enter") {
+      loginForm.dispatchEvent(new Event("submit"));
+    }
+  });
+</script>

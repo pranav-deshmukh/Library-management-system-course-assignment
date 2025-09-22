@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Library Dashboard - City Library</title>
+    <link rel="stylesheet" href="user-dashboard.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>📚 City Library</h1>
+        <div class="header-right">
+          <span class="welcome-text"
+            >Welcome, <span id="user-name">User</span>!</span
+          >
+          <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="main-nav">
+      <div class="container">
+        <ul>
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#browse" class="nav-link">Browse Books</a></li>
+          <li><a href="#my-books" class="nav-link">My Books</a></li>
+          <li><a href="#profile" class="nav-link">Profile</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- Home Section -->
+      <section id="home" class="section active">
+        <div class="hero">
+          <h2>Your Library Dashboard</h2>
+          <p>Discover thousands of books and manage your reading journey</p>
+          <div class="stats">
+            <div class="stat-item">
+              <h3 id="total-books">0</h3>
+              <p>Total Books</p>
+            </div>
+            <div class="stat-item">
+              <h3 id="borrowed-books">0</h3>
+              <p>Books Borrowed</p>
+            </div>
+            <div class="stat-item">
+              <h3 id="available-books">0</h3>
+              <p>Available Books</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <h3>Quick Actions</h3>
+          <div class="action-cards">
+            <div class="action-card" data-action="browse">
+              <div class="action-icon">🔍</div>
+              <h4>Browse Books</h4>
+              <p>Explore our collection</p>
+            </div>
+            <div class="action-card" data-action="my-books">
+              <div class="action-icon">📖</div>
+              <h4>My Books</h4>
+              <p>View borrowed books</p>
+            </div>
+            <div class="action-card" data-action="profile">
+              <div class="action-icon">👤</div>
+              <h4>Profile</h4>
+              <p>Manage your account</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Browse Books Section -->
+      <section id="browse" class="section">
+        <h2>Browse Books</h2>
+        <div class="search-filter">
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Search books by title, author, or genre..."
+          />
+          <select id="genre-filter">
+            <option value="">All Genres</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Mystery">Mystery</option>
+            <option value="Romance">Romance</option>
+            <option value="Science Fiction">Science Fiction</option>
+            <option value="Non-fiction">Non-fiction</option>
+            <option value="Biography">Biography</option>
+          </select>
+        </div>
+        <div id="books-grid" class="books-grid">
+          <!-- Books will be populated by JavaScript -->
+        </div>
+      </section>
+
+      <!-- My Books Section -->
+      <section id="my-books" class="section">
+        <h2>My Books</h2>
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="borrowed">
+            Borrowed Books
+          </button>
+          <button class="tab-btn" data-tab="history">Reading History</button>
+        </div>
+        <div id="borrowed" class="tab-content active">
+          <div id="borrowed-books-list" class="books-list">
+            <!-- Borrowed books will be populated by JavaScript -->
+          </div>
+        </div>
+        <div id="history" class="tab-content">
+          <div id="history-books-list" class="books-list">
+            <!-- Reading history will be populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile Section -->
+      <section id="profile" class="section">
+        <h2>My Profile</h2>
+        <div class="profile-card">
+          <div class="profile-info">
+            <h3 id="profile-name">John Doe</h3>
+            <p>Member since: <span id="member-since">January 2024</span></p>
+            <p>Member ID: <span id="member-id">LIB001</span></p>
+            <p>Email: <span id="user-email">john.doe@email.com</span></p>
+          </div>
+          <div class="profile-stats">
+            <div class="profile-stat">
+              <strong>Books Read:</strong> <span id="books-read">12</span>
+            </div>
+            <div class="profile-stat">
+              <strong>Current Borrowed:</strong>
+              <span id="current-borrowed">3</span>
+            </div>
+            <div class="profile-stat">
+              <strong>Overdue Books:</strong> <span id="overdue-books">0</span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-primary" id="edit-profile">
+              Edit Profile
+            </button>
+            <button class="btn btn-secondary" id="change-password">
+              Change Password
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Book Modal -->
+    <div id="book-modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="modal-book-details">
+          <!-- Book details will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification System -->
+    <div id="notification" class="notification">
+      <span id="notification-message"></span>
+      <button id="close-notification">&times;</button>
+    </div>
+
+    <script src="user-dashboard.js"></script>
+  </body>
+</html>
